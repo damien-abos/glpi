@@ -1368,6 +1368,8 @@ TWIG, ['authldaps_id' => $ID]);
             (new GLPIKey())->decrypt($config_ldap->fields['rootdn_passwd']),
             $config_ldap->fields['use_tls'],
             $config_ldap->fields['deref_option'],
+            $config_ldap->fields['tls_cacertdir'],
+            $config_ldap->fields['tls_cacertfile'],
             $config_ldap->fields['tls_certfile'],
             $config_ldap->fields['tls_keyfile'],
             $config_ldap->fields['use_bind'],
@@ -1481,6 +1483,8 @@ TWIG, ['authldaps_id' => $ID]);
                 (new GLPIKey())->decrypt($this->fields['rootdn_passwd']),
                 $this->fields['use_tls'],
                 $this->fields['deref_option'],
+                $this->fields['tls_cacertdir'],
+                $this->fields['tls_cacertfile'],
                 $this->fields['tls_certfile'],
                 $this->fields['tls_keyfile'],
                 $this->fields['use_bind'],
@@ -1525,6 +1529,8 @@ TWIG, ['authldaps_id' => $ID]);
                 (new GLPIKey())->decrypt($this->fields['rootdn_passwd']),
                 $this->fields['use_tls'],
                 $this->fields['deref_option'],
+                $this->fields['tls_cacertdir'],
+                $this->fields['tls_cacertfile'],
                 $this->fields['tls_certfile'],
                 $this->fields['tls_keyfile'],
                 $this->fields['use_bind'],
@@ -2813,6 +2819,8 @@ TWIG, $twig_params);
             (new GLPIKey())->decrypt($this->fields['rootdn_passwd']),
             $this->fields['use_tls'],
             $this->fields['deref_option'],
+            $this->fields['tls_cacertdir'],
+            $this->fields['tls_cacertfile'],
             $this->fields['tls_certfile'],
             $this->fields['tls_keyfile'],
             $this->fields['use_bind'],
@@ -2830,6 +2838,8 @@ TWIG, $twig_params);
      * @param string  $password             password to use (default '')
      * @param boolean $use_tls              use a TLS connection? (false by default)
      * @param integer $deref_options        deref options used
+     * @param string  $tls_cacertdir        TLS CACERT Directory path (default '')
+     * @param string  $tls_cacertfile       TLS CACERT file name within config directory (deafult '')
      * @param string  $tls_certfile         TLS CERT file name within config directory (default '')
      * @param string  $tls_keyfile          TLS KEY file name within config directory (default '')
      * @param boolean $use_bind             do we need to do an ldap_bind? (true by default)
@@ -2845,6 +2855,8 @@ TWIG, $twig_params);
         $password = "",
         $use_tls = false,
         $deref_options = 0,
+        $tls_cacertdir = "",
+        $tls_cacertfile = "",
         $tls_certfile = "",
         $tls_keyfile = "",
         $use_bind = true,
@@ -2897,6 +2909,25 @@ TWIG, $twig_params);
             }
         }
 
+
+        if (!empty($tls_cacertdir)) {
+            if (!Filesystem::isFilepathSafe($tls_cacertdir)) {
+                trigger_error("TLS CA certificate directory path is not safe.", E_USER_WARNING);
+            } elseif (!file_exists($tls_cacertdir)) {
+                trigger_error("TLS CA certificate directory path is not valid.", E_USER_WARNING);
+            } elseif (!@ldap_set_option(null, LDAP_OPT_X_TLS_CACERTDIR, $tls_cacertdir)) {
+                trigger_error("Unable to set LDAP option `LDAP_OPT_X_TLS_CACERTDIR`", E_USER_WARNING);
+            }
+        }
+        if (!empty($tls_cacertfile)) {
+            if (!Filesystem::isFilepathSafe($tls_cacertfile)) {
+                trigger_error("TLS CA certificate path is not safe.", E_USER_WARNING);
+            } elseif (!file_exists($tls_cacertfile)) {
+                trigger_error("TLS CA certificate path is not valid.", E_USER_WARNING);
+            } elseif (!@ldap_set_option(null, LDAP_OPT_X_TLS_CACERTFILE, $tls_cacertfile)) {
+                trigger_error("Unable to set LDAP option `LDAP_OPT_X_TLS_CACERTFILE`", E_USER_WARNING);
+            }
+        }
         if (!empty($tls_certfile)) {
             if (!Filesystem::isFilepathSafe($tls_certfile)) {
                 trigger_error("TLS certificate path is not safe.", E_USER_WARNING);
@@ -3003,6 +3034,8 @@ TWIG, $twig_params);
             (new GLPIKey())->decrypt($ldap_method['rootdn_passwd']),
             $ldap_method['use_tls'],
             $ldap_method['deref_option'],
+            $ldap_method['tls_cacertdir'] ?? '',
+            $ldap_method['tls_cacertfile'] ?? '',
             $ldap_method['tls_certfile'] ?? '',
             $ldap_method['tls_keyfile'] ?? '',
             $ldap_method['use_bind'],
@@ -3023,6 +3056,8 @@ TWIG, $twig_params);
                 $password,
                 $ldap_method['use_tls'],
                 $ldap_method['deref_option'],
+                $ldap_method['tls_cacertdir'] ?? '',
+                $ldap_method['tls_cacertfile'] ?? '',
                 $ldap_method['tls_certfile'] ?? '',
                 $ldap_method['tls_keyfile'] ?? '',
                 $ldap_method['use_bind'],
@@ -3045,6 +3080,8 @@ TWIG, $twig_params);
                     (new GLPIKey())->decrypt($ldap_method['rootdn_passwd']),
                     $ldap_method['use_tls'],
                     $ldap_method['deref_option'],
+                    $ldap_method['tls_cacertdir'] ?? '',
+                    $ldap_method['tls_cacertfile'] ?? '',
                     $ldap_method['tls_certfile'] ?? '',
                     $ldap_method['tls_keyfile'] ?? '',
                     $ldap_method['use_bind'],
@@ -3065,6 +3102,8 @@ TWIG, $twig_params);
                          $password,
                          $ldap_method['use_tls'],
                          $ldap_method['deref_option'],
+                         $ldap_method['tls_cacertdir'] ?? '',
+                         $ldap_method['tls_cacertfile'] ?? '',
                          $ldap_method['tls_certfile'] ?? '',
                          $ldap_method['tls_keyfile'] ?? '',
                          $ldap_method['use_bind'],
@@ -3773,6 +3812,8 @@ TWIG, $twig_params);
                 (new GLPIKey())->decrypt($authldap->getField('rootdn_passwd')),
                 $authldap->getField('use_tls'),
                 $authldap->getField('deref_option'),
+                $authldap->getField('tls_cacertdir'),
+                $authldap->getField('tls_cacertfile'),
                 $authldap->getField('tls_certfile'),
                 $authldap->getField('tls_keyfile'),
                 $authldap->getField('use_bind'),
@@ -4274,6 +4315,32 @@ TWIG, $twig_params);
 
     public function checkFilesExist(&$input)
     {
+        if (
+            isset($input['tls_cacertdir'])
+            && $input['tls_cacertdir'] !== ''
+            && (!Filesystem::isFilepathSafe($input['tls_cacertdir']) || !file_exists($input['tls_cacertdir']))
+        ) {
+            Session::addMessageAfterRedirect(
+                __s('TLS CA certificate directory path is incorrect'),
+                false,
+                ERROR
+            );
+            return false;
+        }
+
+        if (
+            isset($input['tls_cacertfile'])
+            && $input['tls_cacertfile'] !== ''
+            && (!Filesystem::isFilepathSafe($input['tls_cacertfile']) || !file_exists($input['tls_cacertfile']))
+        ) {
+            Session::addMessageAfterRedirect(
+                __s('TLS CA certificate path is incorrect'),
+                false,
+                ERROR
+            );
+            return false;
+        }
+
         if (
             isset($input['tls_certfile'])
             && $input['tls_certfile'] !== ''

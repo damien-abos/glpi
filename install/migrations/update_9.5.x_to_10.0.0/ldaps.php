@@ -40,13 +40,35 @@
 $default_charset = DBConnection::getDefaultCharset();
 $default_collation = DBConnection::getDefaultCollation();
 
+if (!$DB->fieldExists('glpi_authldaps', 'tls_cacertdir')) {
+    $migration->addField(
+        'glpi_authldaps',
+        'tls_cacertdir',
+        'text',
+        [
+            'after'  => 'inventory_domain'
+        ]
+    );
+}
+
+if (!$DB->fieldExists('glpi_authldaps', 'tls_cacertfile')) {
+    $migration->addField(
+        'glpi_authldaps',
+        'tls_cacertfile',
+        'text',
+        [
+            'after'  => 'tls_cacertdir'
+        ]
+    );
+}
+
 if (!$DB->fieldExists('glpi_authldaps', 'tls_certfile')) {
     $migration->addField(
         'glpi_authldaps',
         'tls_certfile',
         'text',
         [
-            'after'  => 'inventory_domain'
+            'after'  => 'tls_cacertfile'
         ]
     );
 }

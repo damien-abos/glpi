@@ -115,6 +115,8 @@ CREATE TABLE `glpi_authldaps` (
   `end_date_field` varchar(255) DEFAULT NULL,
   `date_creation` timestamp NULL DEFAULT NULL,
   `inventory_domain` varchar(255) DEFAULT NULL,
+  `tls_cacertdir`text,
+  `tls_cacertfile` text,
   `tls_certfile` text,
   `tls_keyfile` text,
   `use_bind` tinyint NOT NULL DEFAULT '1',

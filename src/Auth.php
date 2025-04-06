@@ -852,6 +852,8 @@ class Auth extends CommonGLPI
                             (new GLPIKey())->decrypt($ldap_method["rootdn_passwd"]),
                             $ldap_method["use_tls"],
                             $ldap_method["deref_option"],
+                            $ldap_method["tls_cacertdir"],
+                            $ldap_method["tls_cacertfile"],
                             $ldap_method["tls_certfile"],
                             $ldap_method["tls_keyfile"],
                             $ldap_method["use_bind"],

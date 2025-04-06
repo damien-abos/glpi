@@ -24154,6 +24154,14 @@ msgid "TLS"
 msgstr "TLS"
 
 #: templates/pages/setup/ldap/adv_info.html.twig
+msgid "TLS CA Certdir"
+msgstr ""
+
+#: templates/pages/setup/ldap/adv_info.html.twig
+msgid "TLS CA Certfile"
+msgstr ""
+
+#: templates/pages/setup/ldap/adv_info.html.twig
 msgid "TLS Certfile"
 msgstr "TLS Certfile"
 
